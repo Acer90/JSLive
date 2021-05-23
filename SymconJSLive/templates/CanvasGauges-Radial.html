@@ -17,7 +17,7 @@
 <script>
     let gauge;
 
-    let curValue = {VALUE};
+    let curValue = 0; //{/VALUE}
     let config_global = {GLOBAL};
     let config_ticks = {TICKS};
     let config_highlights = {HIGHLIGHTS};
@@ -37,7 +37,7 @@
 
                 units: confiuration.plate_unit,
 
-                value: {VALUE},
+                value: curValue,
                 minValue: confiuration.min,
                 maxValue: confiuration.max,
 
@@ -55,13 +55,13 @@
 
                 //needle
                 needle: confiuration.needle_display,//show needle
-                needvarype: confiuration.needle_Type, // arrow
+                needleType: confiuration.needle_Type, // arrow
                 needleStart: confiuration.needle_start, //in %
                 needleEnd: confiuration.needle_end,//in %
                 needleWidth: confiuration.needle_width, //in Px
                 colorNeedle: confiuration.needle_colorNeedle,
                 colorNeedleEnd: confiuration.needle_colorNeedleEnd,
-                needleSide: confiuration.linear_needleSide, //“right”, “both” => nur bei linear
+                //needleSide: confiuration.linear_needleSide, //“right”, “both” => nur bei linear
 
                 //valuebox
                 valueBox: confiuration.valuebox_display,
@@ -112,6 +112,7 @@
 
                 animationRule: confiuration.animation_rule, //'linear', //”, “quad”, “quint”, “cycle”, “bounce”, “elastic”  “dequad”, “dequint”, “decycle”, “debounce”, “delastic”.
                 animationDuration: confiuration.animation_duration
+
             }
 
             if(confiuration.title_fontFamily !== ""){
@@ -128,6 +129,13 @@
 
             gauge = new RadialGauge(gauge_config);
             gauge.draw();
+
+            //laden das aktuellen Wertes
+            $.getJSON("/hook/JSLive/getData?Instance={INSTANCE}&pw={PASSWORD}", function (data) {
+                data.forEach(function (part, index) {
+                    UpdateGauge(part.Variable, part.Value);
+                });
+            });
         }catch (e){
             alert(e);
         }
@@ -144,10 +152,10 @@
 
         ws.onmessage = function(e) {
             data = JSON.parse(e.data);
-            if(data.Message == 10506) {
+            if(data.Message === 10506) {
                 //refresh webseite
                 location.reload();
-            } else if(data.Message == 10603) {
+            } else if(data.Message === 10603) {
                 UpdateGauge(data.SenderID, data.Data[0]);
             }
         };
@@ -167,11 +175,7 @@
 
     function UpdateGauge(id_val, val){
         isUpdated = false;
-
-        if(id_val == confiuration.Variable){
-            //console.log(val);
-            gauge.value = val;
-        }
+        gauge.value = val;
     }
 
     async function PullNewData(refreshRate){

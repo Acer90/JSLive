@@ -17,7 +17,7 @@
 <script>
     let gauge;
 
-    let curValue = {VALUE};
+    let curValue = 0; //{/VALUE}
     let config_global = {GLOBAL};
     let config_ticks = {TICKS};
     let config_highlights = {HIGHLIGHTS};
@@ -35,6 +35,8 @@
             gauge_config = {
                 renderTo: 'gauge',
                 height: window.innerHeight - 20,
+
+                value: curValue,
                 minValue: 0,
                 maxValue: 360,
                 majorTicks: [
@@ -78,7 +80,7 @@
                 needleCircleSize: 15,
                 needleCircleOuter: false,
 
-                needvarype: "line",
+                needleType: "line",
                 needleStart: 75,
                 needleEnd: 99,
                 needleWidth: 3,
@@ -107,7 +109,13 @@
 
             gauge = new RadialGauge(gauge_config);
             gauge.draw();
-            gauge.value = curValue;
+
+            //laden das aktuellen Wertes
+            $.getJSON("/hook/JSLive/getData?Instance={INSTANCE}&pw={PASSWORD}", function (data) {
+                data.forEach(function (part, index) {
+                    UpdateGauge(part.Variable, part.Value);
+                });
+            });
         }catch (e) {
             alert(e);
         }
@@ -124,10 +132,10 @@
 
         ws.onmessage = function(e) {
             data = JSON.parse(e.data);
-            if(data.Message == 10506) {
+            if(data.Message === 10506) {
                 //refresh webseite
                 location.reload();
-            } else if(data.Message == 10603) {
+            } else if(data.Message === 10603) {
                 UpdateGauge(data.SenderID, data.Data[0]);
             }
         };
@@ -147,11 +155,7 @@
 
     function UpdateGauge(id_val, val){
         isUpdated = false;
-
-        if(id_val == confiuration.Variable){
-            //console.log(val);
-            gauge.value = val;
-        }
+        gauge.value = val;
     }
 
     async function PullNewData(refreshRate){
