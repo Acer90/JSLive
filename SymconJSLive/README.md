@@ -1,5 +1,4 @@
 [![Version](https://img.shields.io/badge/Symcon-PHPModul-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
-[![Version](https://img.shields.io/badge/Modul%20Version-3.23-blue.svg)]()
 [![Version](https://img.shields.io/badge/Symcon%20Version-5.3%20%3E-green.svg)](https://www.symcon.de/forum/threads/30857-IP-Symcon-5-3-%28Stable%29-Changelog)
 # SymconJSLive Splitter
 
@@ -42,11 +41,11 @@ Achtung dieser Modus sorgt für einen erhöhten Datentransfer, und belastet bei 
 
 ## 5. Einrichten und Aktionen
 
-der JSLive-Splitter kann auch ohne konfiguration verwendet werden, aus Sicherheitsgründen sollte aber ein Password
-gesetzt werden. Dieses verhinder vor unbefugten zugriff Dritter!
+Der JSLive-Splitter kann auch ohne Konfiguration verwendet werden, aus Sicherheitsgründen sollte aber ein Passwort
+verwendet werden. Dieses schützt, vor unbefugten zugriff Dritter!
 
 **Connect Adresse laden**
-  - Lädt die Addresse vom Connect Modul
+  - Lädt die Adresse vom Connect Modul
 
 **Benutzerdefiniert Vorlagen laden**
   - Dient zum exportieren der Vorlagen, diese können im Anschluss angepasst und einzelnen Modulen unter 
