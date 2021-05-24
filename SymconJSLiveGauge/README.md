@@ -47,6 +47,20 @@ GUID des Modules (z.B. wenn Instanz per PHP angelegt werden soll):
 | :---------------: | :------------------------------------: |
 | Device            | {71B93700-9659-97C6-AD83-984C2B44139F} |
 
+**Allgemeine Einstellungen**
+
+![Gauge Overview](https://github.com/Acer90/SymconModule/blob/alpha/imgs/Gauge-Overview.png?raw=true)
+
+1. Titel
+2. Platte (Plate)
+3. Nadel/Zeiger (Needle)
+4. Wert (ValueBox)
+5. Fortschrittsbalken (Progressbar)
+6. Schritte/Zwischenwerte (Ticks)
+
+Weitere Infos:
+https://canvas-gauges.com/documentation/user-guide/configuration#gauge-specific-configuration-options
+
 **Expert Einstellungen**
 
 | Eigenschaft       | Typ       | Standardwert  | Info                                                                      |
