@@ -154,7 +154,9 @@
             data = JSON.parse(e.data);
             if(data.Message === 10506) {
                 //refresh webseite
-                location.reload();
+                setTimeout(function (){
+                    location.reload();
+                },1000);
             } else if(data.Message === 10603) {
                 UpdateGauge(data.SenderID, data.Data[0]);
             }
@@ -175,6 +177,9 @@
 
     function UpdateGauge(id_val, val){
         isUpdated = false;
+        if(val < confiuration.min) val = confiuration.min;
+        if(val > confiuration.max) val = confiuration.max;
+
         gauge.value = val;
     }
 
@@ -195,9 +200,7 @@
             await sleep(refreshRate);
         }
     }
-
-
-
+    
     window.onload = function() {
         try {
             LoadGauge();

@@ -19,9 +19,12 @@ Alle meine Module unter: https://github.com/Acer90/SymconModule
 - __SymconJSLive__ ([Dokumentation](SymconJSLive))  
 	Splitter für alle JSLive Module
 	
+- __SymconJSLiveDoughnutPie__ ([Dokumentation](SymconJSLiveDoughnutPie))  
+	Modul zum erstellen von Donat- und Tortendiagrammen
+	
 - __SymconJSLiveGauge__ ([Dokumentation](SymconJSLiveGauge))  
 	Modul zum erstellen von animierte Messinstrumente(Gauges)
-
+	
 
 ## 2. Voraussetzungen
 
