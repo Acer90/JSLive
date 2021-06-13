@@ -154,6 +154,7 @@
     }
 
     function UpdateGauge(id_val, val){
+        if(typeof gauge === 'undefined') return;
         isUpdated = false;
         gauge.value = val;
     }
@@ -193,7 +194,7 @@
 
     document.fonts.ready.then(function () {
         //if font is load then here Start load guage
-        if(confiuration.font_isSet) LoadGauge();
+        if(typeof gauge !== 'undefined') gauge.update();
     });
 </script>
 </body>
