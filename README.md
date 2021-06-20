@@ -30,6 +30,9 @@ Alle meine Module unter: https://github.com/Acer90/SymconModule
 	
 - __SymconJSLiveGauge__ ([Dokumentation](SymconJSLiveGauge))  
 	Modul zum erstellen von animierte Messinstrumente(Gauges)
+	
+- __SymconJSLiveProgressbar__ ([Dokumentation](SymconJSLiveProgressbar))  
+	Modul zum erstellen von anpassbaren Progressbars
 
 ## 2. Voraussetzungen
 
