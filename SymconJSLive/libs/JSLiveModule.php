@@ -22,7 +22,7 @@ class JSLiveModule extends IPSModule
                 $html_str .= "\r\n";
             }
 
-            $html_str .= '<link rel="stylesheet" type="text/css" href="{ADDRESS}/hook/JSLive/js/css/fonts/'.$font.'.css">';
+            $html_str .= '<link rel="stylesheet" type="text/css" href="/hook/JSLive/js/css/fonts/'.$font.'.css">';
         }
 
         return $html_str;
@@ -267,6 +267,18 @@ class JSLiveModule extends IPSModule
                     }
                 }
 
+                if (array_key_exists("Variable_Color", $item) && IPS_VariableExists($item["Variable_Color"])) {
+                    $varList[] = $item["Variable_Color"];
+                }
+
+                if (array_key_exists("Variable_ColorTemperature", $item) && IPS_VariableExists($item["Variable_ColorTemperature"])) {
+                    $varList[] = $item["Variable_ColorTemperature"];
+                }
+
+                if (array_key_exists("Variable_SwitchTemperature", $item) && IPS_VariableExists($item["Variable_SwitchTemperature"])) {
+                    $varList[] = $item["Variable_SwitchTemperature"];
+                }
+
                 if(array_key_exists("Object", $item)){
 
                 }
@@ -289,7 +301,14 @@ class JSLiveModule extends IPSModule
             }
         }
 
-        if($this->ReadPropertyBoolean("Debug")) $this->SendDebug("GetVariableList" , json_encode($varList), 0);
+        if(array_key_exists("Variable", $confData)){
+            if(IPS_VariableExists($confData["Variable"])){
+                $varList[] = $confData["Variable"];
+            }
+        }
+
+        //if($this->ReadPropertyBoolean("Debug"))
+            $this->SendDebug("GetVariableList" , json_encode($varList), 0);
         return $varList;
     }
     protected function UpdateMessageSink(array $newVariables){
@@ -418,8 +437,8 @@ class JSLiveModule extends IPSModule
         $this->UpdateIdentList();
 
         //HTMLBOX and Chache!
-        //$this->UpdateOutput();
         $this->SetBuffer("Output", "");
+        $this->UpdateOutput();
         $this->UpdateIframe();
 
         //Update MessageSink
@@ -434,29 +453,45 @@ class JSLiveModule extends IPSModule
         //setLastModifed buffer
         $this->SetBuffer("LastModifed", gmdate("D, d M Y H:i:s", time())." GMT");
 
-        if($this->ReadPropertyBoolean("EnableCache")) {
+        $sendData = array();
+        $sendData["Html"] = $this->GetWebpage();
+        $sendData["InstanceID"] = $this->InstanceID;
+        $sendData["Type"] = "UpdateHtml";
+        $sendData["ViewPort"] = $this->ReadPropertyBoolean("EnableViewport");
 
-            $sendData = array();
-            $sendData["Html"] = $this->GetWebpage();
-            $sendData["InstanceID"] = $this->InstanceID;
-            $sendData["Type"] = "UpdateHtml";
-            $sendData["ViewPort"] = $this->ReadPropertyBoolean("EnableViewport");
+        $pData = json_decode($this->SendDataToParent(json_encode([
+            'DataID' => "{751AABD7-E31D-024C-5CC0-82AC15B84095}",
+            'Buffer' => utf8_encode(json_encode($sendData)),
+        ])), true);
 
-            $pData = $this->SendDataToParent(json_encode([
-                'DataID' => "{751AABD7-E31D-024C-5CC0-82AC15B84095}",
-                'Buffer' => utf8_encode(json_encode($sendData)),
-            ]));
-
-            $this->SetBuffer("Output", $pData);
-        }else{
+        if ($this->ReadPropertyBoolean("EnableCache")) {
+            $this->SetBuffer("Output", $pData["output"]);
+        } else {
             $this->SetBuffer("Output", "");
         }
+
+        if ($this->ReadPropertyBoolean("CreateIPSView") && $pData["ipsview"]) {
+            //Überschreibe Iframe wenn nativMode aktive
+            if(@IPS_GetObjectIDByIdent("IPSView", $this->InstanceID) === false){
+                $this->RegisterVariableString("IPSView", $this->Translate("IPSView"), "~HTMLBox", 0);
+
+                //An Symcon bitte nicht meckern, aber im webfront geht die native integration nicht, deshalb blende ich dieses element hier aus.
+                IPS_SetHidden(@IPS_GetObjectIDByIdent("IPSView", $this->InstanceID),true);
+            }
+
+            $this->SetValue("IPSView", $pData["output"]);
+        }else{
+            $this->UnregisterVariable("IPSView");
+        }
+
 
         //send refresh website to client
         //$this->SendDataToSocketClient($this->InstanceID, 10506, array());
     }
     protected function UpdateIframe(){
+        //Gateway not ready
         if (IPS_GetInstance($this->InstanceID)["InstanceStatus"] != 102) return;
+
         $htmlStr = "";
         $scrolling = "no";
         $height = $this->ReadPropertyInteger("IFrameHeight");
@@ -468,15 +503,11 @@ class JSLiveModule extends IPSModule
             //$link = $this->GetLink();
 
             if($height == 0){
-                $htmlStr .= '<iframe src="' . $link . '" width="100%" frameborder="0" style="overflow:hidden;height:100%;width:100%" height="100%" scrolling="'.$scrolling.'" ></iframe>'; //onload="resizeIframe(this)"
-
+                //$link="https://wiki.selfhtml.org/extensions/Selfhtml/frickl.php/Beispiel:JS-window-abmessungen.html#view_result";
+                $htmlStr .= '<iframe src="' . $link . '" frameborder="0" scrolling="'.$scrolling.'"></iframe>';
             }else{
                 $htmlStr .= '<iframe src="' . $link . '" width="100%" frameborder="0" scrolling="'.$scrolling.'" height="'.$height.'"></iframe>';
             }
-
-            //$htmlStr .= '<script>
-                //screen.lockOrientation("landscape");
-                //</script>';
 
             $this->SetValue("Output", $htmlStr);
         }else{

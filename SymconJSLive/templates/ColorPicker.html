@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {VIEWPORT} <!-- Dont Remove this line, it can be disabled at intstance! -->
+    <title>ColorPicker</title>
+</head>
+<script src="/hook/JSLive/js/jquery.min.js"></script>
+<script src="/hook/JSLive/js/util.js"></script>
+<script src="/hook/JSLive/js/iro/5.5.0/iro.js"></script>
+
+
+<body style="text-align: center;">
+<svg style="display:none;">
+    <defs>
+        <g id="handle" stroke-width="2" fill="#fff" stroke="#000">
+            <g transform="translate(-2.000000, 0.000000)">
+                <path d="M11.5201888,0.98376551 C13.6952297,0.98376551 15.8701457,1.81608292 17.5295957,3.48022772 C19.1901518,5.14549409 20.0201888,7.32814902 20.0201888,9.51067916 C20.0201888,11.5892784 19.2673214,13.6679882 17.7611695,15.299761 L17.529597,15.541119 L16.751934,16.320985 L16.3895078,16.6844379 L15.7908391,17.2848025 L11.5201888,21.5675509 L6.56546871,16.5987948 L6.06410518,16.096011 C4.16105924,14.1875741 3.18084887,11.8968269 3.09234842,9.65314602 C3.00270091,7.38038455 3.8309449,5.16482966 5.5107793,3.48023034 C7.17023192,1.81608292 9.34514792,0.98376551 11.5201888,0.98376551 Z M11.5,6 C10.5335017,6 9.65850169,6.39175084 9.02512627,7.02512627 C8.39175084,7.65850169 8,8.53350169 8,9.5 C8,10.4664983 8.39175084,11.3414983 9.02512627,11.9748737 C9.65850169,12.6082492 10.5335017,13 11.5,13 C12.4664983,13 13.3414983,12.6082492 13.9748737,11.9748737 C14.6082492,11.3414983 15,10.4664983 15,9.5 C15,8.53350169 14.6082492,7.65850169 13.9748737,7.02512627 C13.3414983,6.39175084 12.4664983,6 11.5,6 Z" id="Combined-Shape"></path>
+            </g>
+        </g>
+    </defs>
+</svg>
+<div id="picker"></div>
+
+<script>
+    let config_global = {GLOBAL};
+    let config_variabels = {VARIABELS};
+    let config_layout = {LAYOUT};
+    let configuration = {CONFIG};
+
+    let colors_ids = [];
+    let colorsTemperatures_ids = [];
+    let colorsTemperaturesMode_ids = [];
+
+    let colorPicker = new iro.ColorPicker("#picker",  LoadPicker());
+
+    let last_update = Date.now();
+    let updateId = [];
+    let updateVal = [];
+    let running = false;
+
+    function LoadPicker(){
+
+            var laydata = GenerateLayoutData();
+            var wdh = window.outerHeight - 20;
+
+            if (wdh > window.outerWidth) {
+                wdh = window.outerWidth - 20;
+            }
+
+            if (configuration.manWidth > 0) {
+                wdh = configuration.manWidth;
+            }
+
+            //alert("Breite: " + wdh);
+
+            if (configuration.layout_Direction === "vertical") {
+                wdh = wdh - laydata.width_s;
+
+                if (laydata.counter_wheelbox > 0) {
+                    wdh = (wdh / laydata.counter_wheelbox) - (laydata.counter_wheelbox * 10);
+                }
+            }
+
+            config = {
+                layoutDirection: configuration.layout_Direction,
+                layout: laydata.output,
+                colors: GenerateColorData(),
+                width: wdh,
+                borderColor: configuration.style_borderColor,
+                borderWidth: configuration.style_borderWidth,
+                handleRadius: configuration.style_handleRadius
+                //handleSvg: '#handle',
+                //handleProps: {x: -8, y: -20}
+
+            };
+
+            return config;
+        try {
+        }catch (e){
+            alert("Colorpicker | ",e);
+        }
+    }
+
+    function GenerateLayoutData(){
+        var output = [];
+        var width_s = 0;
+        var counter_wheelbox = 0;
+
+        config_layout.forEach(function (part, index){
+            item = {};
+            options = {};
+
+            switch(part.Layout){
+                default:
+                case "Wheel":
+                    item["component"] = iro.ui.Wheel;
+                    options["wheelLightness"] = configuration.wheel_Lightness;
+                    options["wheelAngle"] = configuration.wheel_Angle;
+                    options["wheelDirection"] = configuration.wheel_Direction;
+                    counter_wheelbox++;
+                    break;
+                case "Box":
+                    item["component"] = iro.ui.Box;
+                    counter_wheelbox++;
+                    break;
+                case "Slider":
+                    item["component"] = iro.ui.Slider;
+                    if(part.sliderShape === "circle"){
+                        counter_wheelbox++;
+                    }else{
+                        width_s = width_s + part.sliderSize + 10;
+                    }
+
+
+                    options["sliderType"] = part.sliderType;
+                    options["sliderSize"] = part.sliderSize;
+                    options["sliderShape"] = part.sliderShape;
+                    break;
+            }
+            item["component"]
+
+            item["options"] = options;
+            output.push(item);
+        });
+
+        if(output.length === 0){
+            //add default!
+            //Wheel
+            item = {};
+            options = {};
+
+            item["component"] = iro.ui.Wheel;
+            output.push(item);
+            counter_wheelbox++;
+
+            //silder Value
+            item = {};
+            options = {};
+
+            item["component"] = iro.ui.Slider;
+            options["sliderType"] = "value";
+            options["sliderSize"] = 40;
+            item["options"] = options;
+            output.push(item);
+            width_s = width_s + 40 + 10;
+        }
+
+        return {"output": output, "width_s": width_s, "counter_wheelbox": counter_wheelbox};
+    }
+    function GenerateColorData(){
+        var output = [];
+
+        colors_ids = [];
+        colorsTemperatures_ids = [];
+        colorsTemperaturesMode_ids = [];
+
+        config_variabels.forEach(function (part, index){
+            if(part.Color.Variable === 0 || part.Temperature.Variable === 0){
+                console.log("Überspinge Farbe => keine avriable gesetzt!");
+            }else{
+                if(part.Mode.Variable > 0 && part.Mode.Value){
+                    //temperture Mode
+                    temp = part.Temperature.Value;
+
+                    if(part.Temperature.isMired){
+                        temp = MiredToKelvin(temp);
+                    }
+                    output.push(colorTemperatureToRGB(temp));
+                }else{
+                    //color Mode
+                    output.push(hexToRgb(part.Color.Value));
+                }
+
+                colors_ids.push(part.Color.Variable);
+                colorsTemperatures_ids.push(part.Temperature.Variable);
+                colorsTemperaturesMode_ids.push(part.Mode.Variable);
+
+            }
+        });
+
+        return output;
+    }
+
+    colorPicker.on('color:change', function(color) {
+
+        console.log(Date.now() + " >> ChangeColor (" + color.index + ") => " + color.rgb);
+
+        id = config_variabels[color.index].Color.Variable;
+        val = hexToInt(color.rgb);
+
+        val2 = color.kelvin;
+        if(config_variabels[color.index].Temperature.isMired){
+            val2 = KelvinToMired(val2);
+        }
+
+        config_variabels[color.index].Color.Value = val;
+        config_variabels[color.index].Temperature.Value = val;
+
+        if(config_variabels[color.index].Mode.Value){
+            id = config_variabels[color.index].Temperature.Variable;
+            val = val2;
+
+        }
+
+        if(updateId.includes(id)){
+            //updaten
+            index = updateId.indexOf(id);
+            updateVal[index] = val;
+        }else{
+            //anlegen
+            updateId.push(id);
+            updateVal.push(val);
+        }
+
+        console.log(Date.now() + " >> ChangeColor => "+ JSON.stringify(updateVal));
+
+        if(!running) UpdateWorker();
+    });
+
+    async function UpdateWorker(){
+        running = true;
+        while (running){
+            await sleep(1);
+            try {
+                //console.log("UpdateWorker => "+ updateVal.length + " | " + updateId.length);
+                if((last_update + configuration.DataUpdateRate) <= Date.now() && updateVal.length > 0 && updateId.length > 0){
+                    last_update = Date.now();
+                    //console.log("UpdateWorker => "+ JSON.stringify(updateVal) + " | " + JSON.stringify(updateId));
+
+                    for (i = 0; i < updateVal.length; i++) {
+                        console.log(Date.now() + " >> UpdateWorker | Update " + JSON.stringify(updateVal) + " | " + JSON.stringify(updateId));
+                        console.log(Date.now() + " >> UpdateWorker | URL: /hook/JSLive/setData?Instance={INSTANCE}&pw={PASSWORD}&var=" +updateId[i]+ "&val="+updateVal[i]);
+                        var response = await fetch("/hook/JSLive/setData?Instance={INSTANCE}&pw={PASSWORD}&var=" +updateId[i]+ "&val="+updateVal[i]);
+                        console.log(Date.now() + " >> UpdateWorker Response => " + response.statusText + " (" + response.status + ")");
+                    }
+
+                    updateVal = [];
+                    updateId = [];
+
+                    console.log(Date.now() + " >> UpdateWorker => CLOSE");
+                    running = false;
+                }
+            }catch (e) {
+                console.log(Date.now() + " >> UpdateWorker => ", e);
+            }
+        }
+    }
+
+    function connect() {
+        var ws = new WebSocket(location['protocol'].replace(/^http/, 'ws') + "//" + location['host'] + "/hook/JSLive/WS/" + {INSTANCE});
+        ws.onopen = function() {
+            // subscribe to some channels
+            //ws.send(JSON.stringify({
+            //.... some message the I must send when I connect ....
+            //}));
+        };
+
+        ws.onmessage = function(e) {
+            data = JSON.parse(e.data);
+            if(data.Message == 10506) {
+                //refresh webseite
+                setTimeout(function (){
+                    location.reload();
+                },1000);
+            } else if(data.Message == 10603) {
+                UpdateColorPicker(data.SenderID, data.Data[0]);
+            }
+        };
+
+        ws.onclose = function(e) {
+            console.log(Date.now() + ' >> Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
+            setTimeout(function() {
+                connect();
+            }, 1000);
+        };
+
+        ws.onerror = function(err) {
+            console.error(Date.now() + ' >> Socket encountered error: ', err.message, 'Closing socket');
+            ws.close();
+        };
+    }
+
+    function UpdateColorPicker(id_val, val){
+        isUpdated = false;
+        now = Date.now();
+        if(running ) return;
+
+        if(colors_ids.includes(id_val)){
+            //änderung farbe
+            index = colors_ids.indexOf(id_val);
+
+            if(config_variabels[index].Color.Value !== val){
+                console.log(Date.now() + " >> UpdateColorPicker (Color)" + index + " => " + val+ " (" + config_variabels[index].Color.Value + ")");
+                config_variabels[index].Color.Value = val;
+                isUpdated = true;
+            }
+        }
+
+        if(colorsTemperatures_ids.includes(id_val)){
+            //änderung temperture!!
+            index = colorsTemperatures_ids.indexOf(id_val);
+
+            if(config_variabels[index].Temperature.Value !== val){
+                config_variabels[index].Temperature.Value = val;
+                console.log(Date.now() + " >> UpdateColorPicker (Temp)" + index + " => " + val+ " (" + config_variabels[index].Temperature.Value + ")");
+                isUpdated = true;
+            }
+        }
+
+        if(colorsTemperaturesMode_ids.includes(id_val)){
+            //änderung des Moduses
+            index =  colorsTemperaturesMode_ids.indexOf(id_val);
+
+            if(config_variabels[index].Mode.Value !== val){
+                config_variabels[index].Mode.Value = val;
+                console.log(Date.now() + " >> UpdateColorPicker (Mode)" + index + " => " + val + " (" + config_variabels[index].Mode.Value + ")");
+            }
+        }
+
+        if(isUpdated){
+            colorPicker.setColors(GenerateColorData());
+        }
+    }
+
+    async function PullNewData(refreshRate){
+        refreshRate = refreshRate * 1000;
+        while (true){
+            try {
+                $.getJSON("/hook/JSLive/getData?Instance={INSTANCE}&pw={PASSWORD}", function (data) {
+                    data.forEach(function (part, index) {
+                        UpdateColorPicker(part.Color.Variable, part.Color.Value);
+                        UpdateColorPicker(part.Temperature.Variable, part.Temperature.Value);
+                        UpdateColorPicker(part.Mode.Variable, part.Mode.Value);
+                    });
+                });
+
+                //Control Variables
+            }catch (e) {
+                console.log(Date.now() + " >> PullNewData => ", e);
+            }
+            await sleep(refreshRate);
+        }
+    }
+
+    window.onload = function() {
+        try {
+            if (config_global.LocalAddress == "" && config_global.LocalDataMode == 0) {
+                //pullup Mode local
+                refreshRate = config_global.LocalRefreshTime;
+                PullNewData(refreshRate);
+            } else if (config_global.RemoteAddress == "" && config_global.RemoteDataMode == 0) {
+                //pullup Mode remote
+                refreshRate = config_global.RefreshTime;
+                PullNewData(refreshRate);
+            } else {
+                connect();
+            }
+        }catch (e) {
+            alert("Colorpicker | ", e);
+        }
+    }
+</script>
+</body>
+</html>
