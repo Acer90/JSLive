@@ -25,6 +25,9 @@ Alle meine Module unter: https://github.com/Acer90/SymconModule
 - __SymconJSLiveChartRadar__ ([Dokumentation](SymconJSLiveChartRadar))  
 	Modul zum erstellen von Radardiagrammen
 	
+- __SymconJSLiveColorPicker__ ([Dokumentation](SymconJSLiveColorPicker))  
+	Modul zum erstellen von Colorpicker
+	
 - __SymconJSLiveCustom__ ([Dokumentation](SymconJSLiveCustom))  
 	Modul zum erstellen von Eigner Javasriptausgaben auf basis von JSLive
 	
