@@ -56,6 +56,7 @@ class SymconJSLiveProgressbar extends JSLiveModule{
 
         //Expert
         $this->RegisterPropertyBoolean("Debug", false);
+        $this->RegisterPropertyInteger("ViewLevel", 0);
         $this->RegisterPropertyBoolean("EnableCache", true);
         $this->RegisterPropertyBoolean("CreateOutput", true);
         $this->RegisterPropertyBoolean("CreateIPSView", true);
@@ -170,8 +171,7 @@ class SymconJSLiveProgressbar extends JSLiveModule{
             $htmlData = str_replace("{VALUE}", 0, $htmlData);
         }
 
-        $arr = array($this->ReadPropertyString("style_fontFamily"));
-        $htmlData = str_replace("{FONTS}", $this->LoadFonts($arr), $htmlData);
+        $htmlData = str_replace("{FONTS}", $this->LoadFonts(), $htmlData);
 
         return $htmlData;
     }

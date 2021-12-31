@@ -16,6 +16,7 @@ class SymconJSLiveGauge extends JSLiveModule{
 
         //Expert
         $this->RegisterPropertyBoolean("Debug", false);
+        $this->RegisterPropertyInteger("ViewLevel", 0);
         $this->RegisterPropertyBoolean("EnableCache", true);
         $this->RegisterPropertyBoolean("CreateOutput", true);
         $this->RegisterPropertyBoolean("CreateIPSView", true);
@@ -186,8 +187,7 @@ class SymconJSLiveGauge extends JSLiveModule{
         $htmlData = str_replace("{VALUE}", number_format($val, $this->ReadPropertyInteger("precision"), '.', ''), $htmlData);
 
         //Load Fonts
-        $arr = array($this->ReadPropertyString("valuebox_fontFamily"), $this->ReadPropertyString("ticks_fontFamily"), $this->ReadPropertyString("title_fontFamily"));
-        $htmlData = str_replace("{FONTS}", $this->LoadFonts($arr), $htmlData);
+        $htmlData = str_replace("{FONTS}", $this->LoadFonts(), $htmlData);
 
         return $htmlData;
     }

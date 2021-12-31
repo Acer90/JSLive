@@ -11,6 +11,7 @@ class SymconJSLiveCustom extends JSLiveModule{
 
         //Expert
         $this->RegisterPropertyBoolean("Debug", false);
+        $this->RegisterPropertyInteger("ViewLevel", 0);
         $this->RegisterPropertyBoolean("EnableCache", true);
         $this->RegisterPropertyBoolean("CreateOutput", true);
         $this->RegisterPropertyBoolean("CreateIPSView", true);
@@ -452,8 +453,7 @@ class SymconJSLiveCustom extends JSLiveModule{
         $htmlData = str_replace("{DATASETS}", $this->GetAllData(), $htmlData);
 
         //Load Fonts
-        $arr = array($this->ReadPropertyString("style_fontFamily"));
-        $htmlData = str_replace("{FONTS}", $this->LoadFonts($arr), $htmlData);
+        $htmlData = str_replace("{FONTS}", $this->LoadFonts(), $htmlData);
 
         //Load Libarys
         $arr = $this->LoadLibraries();

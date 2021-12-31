@@ -2,14 +2,19 @@
 
 class JSLiveModule extends IPSModule
 {
-    protected function LoadFonts(array $fonts){
+    protected function LoadFonts(){
         $font_list = array();
         $html_str = "";
 
-        //fonts bereinigen!
-        foreach ($fonts as $font){
-            if(!in_array($font, $font_list) && !empty($font)){
-                $font_list[] = $font;
+        //alle fonts settings finden
+        $conf_Data = json_decode(IPS_GetConfiguration($this->InstanceID), true);
+        foreach ($conf_Data as $conf_key => $conf_item){
+            if(strpos($conf_key, "_fontFamily") === false) continue;
+
+            if(!in_array($conf_item, $font_list) && !empty($conf_item)){
+                $font_list[] = $conf_item;
+                if($this->ReadPropertyBoolean("Debug"))
+                    $this->SendDebug("LoadFonts", "New font found => " . $conf_item, 0);
             }
         }
 
@@ -228,6 +233,73 @@ class JSLiveModule extends IPSModule
         if($withScript) $pData .= "&scripts=1";
 
         return $pData;
+    }
+
+    //Dynamic Configuration form
+    public function GetConfigurationForm() {
+        return json_encode($this->LoadConfigurationForm());
+    }
+    public function LoadConfigurationForm(){
+        $formData = array();
+
+        $jsonPath = realpath(__DIR__ . "/../../" . get_called_class() . "/form.json");
+        if($this->ReadPropertyBoolean("Debug")) $this->SendDebug("GetConfigurationForm", $jsonPath, 0 );
+        $formData = json_decode(file_get_contents($jsonPath), true);
+
+        //Remove Confoniguration for Basic => 0; Advance => 1; Expert => 2
+        //$this->SendDebug("BEFOR", json_encode($formData), 0 );
+
+        $formData["elements"] = $this->RecursiveUpdateForm($formData["elements"]);
+        $formData["actions"] = $this->RecursiveUpdateForm($formData["actions"]);
+
+        //$this->SendDebug("AFTER", json_encode($formData), 0 );
+
+        return $formData;
+    }
+    private function RecursiveUpdateForm($arr){
+        foreach ($arr as $key => $item) {
+            //$this->SendDebug("RecursiveUpdateForm", $key, 0 );
+
+            //items Recusive for Items
+            if (array_key_exists("items", $item)) $arr[$key]["items"] = $this->RecursiveUpdateForm($arr[$key]["items"]);
+            if (array_key_exists("options", $item)) $arr[$key]["options"] = $this->RecursiveUpdateForm($arr[$key]["options"]);
+            if (array_key_exists("columns", $item)) $arr[$key]["columns"] = $this->RecursiveUpdateForm($arr[$key]["columns"]);
+
+            //list options
+            if (array_key_exists("edit", $item) && is_array($item["edit"]) && array_key_exists("columns", $item["edit"])) $arr[$key]["edit"]["columns"] = $this->RecursiveUpdateForm($arr[$key]["edit"]["columns"]);
+            if (array_key_exists("edit", $item) && is_array($item["edit"]) && array_key_exists("options", $item["edit"])) $arr[$key]["edit"]["options"] = $this->RecursiveUpdateForm($arr[$key]["edit"]["options"]);
+
+            //ignore items without viewlevel element
+            if (!array_key_exists("viewlevel", $item)) continue;
+
+            //viewLevelExactly set value
+            $viewLevelExactly = false;
+            if (array_key_exists("viewlevelexactly", $item)) $viewLevelExactly = $arr[$key]["viewlevelexactly"];
+
+            if ($viewLevelExactly == true && $arr[$key]["viewlevel"] != $this->ReadPropertyInteger("ViewLevel")) {
+                //löschen wenn viewlevel nicht genau das level ist!!!
+                unset($arr[$key]);
+            }elseif($arr[$key]["viewlevel"] > $this->ReadPropertyInteger("ViewLevel")){
+                if(array_key_exists("viewdisable", $item) && $arr[$key]["viewdisable"] == true){
+                    //diable wenn viewdisable == 1
+                    $arr[$key]["enabled"] = false;
+                }else{
+                    //löschen wenn viewlevel des elements zu hoch
+                    unset($arr[$key]);
+
+                }
+            }else{
+                if($this->ReadPropertyBoolean("Debug") && array_key_exists("caption", $item) && $arr[$key]["viewlevel"] > 0){
+                    switch($arr[$key]["viewlevel"]){
+                        case 0: $arr[$key]["caption"] = $arr[$key]["caption"] . " (Basic)";
+                        case 1: $arr[$key]["caption"] = $arr[$key]["caption"] . " (Advance)";
+                        case 2: $arr[$key]["caption"] = $arr[$key]["caption"] . " (Expert)";
+                    }
+                }
+            }
+        }
+
+        return array_values($arr);
     }
 
     //Messagesink

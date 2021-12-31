@@ -10,6 +10,7 @@ class SymconJSLiveChart extends JSLiveModule{
 
         //Expert
         $this->RegisterPropertyBoolean("Debug", false);
+        $this->RegisterPropertyInteger("ViewLevel", 0);
         $this->RegisterPropertyBoolean("EnableCache", true);
         $this->RegisterPropertyBoolean("CreateOutput", true);
         $this->RegisterPropertyBoolean("CreateIPSView", true);
@@ -374,8 +375,7 @@ class SymconJSLiveChart extends JSLiveModule{
         $htmlData = str_replace("{XAXES}", $this->json_encode_advanced($this->GenerateXAxesData()), $htmlData);
 
         //Load Fonts
-        $arr = array($this->ReadPropertyString("title_fontFamily"), $this->ReadPropertyString("axes_fontFamily"), $this->ReadPropertyString("legend_fontFamily"), $this->ReadPropertyString("tooltips_fontFamily"), $this->ReadPropertyString("datalabels_fontFamily"));
-        $htmlData = str_replace("{FONTS}", $this->LoadFonts($arr), $htmlData);
+        $htmlData = str_replace("{FONTS}", $this->LoadFonts(), $htmlData);
 
         return $htmlData;
     }
@@ -646,7 +646,7 @@ class SymconJSLiveChart extends JSLiveModule{
 
                 if(array_key_exists("AxesStack", $item) && $item["AxesStack"] == true) {
                     $axisoutput["stack"] = "stack";
-                    //$axisoutput["offset"] = true;
+                    //if($key > 0) $axisoutput["offset"] = true;
                 }
 
                 if(array_key_exists("AxesStackWeight", $item)) {
