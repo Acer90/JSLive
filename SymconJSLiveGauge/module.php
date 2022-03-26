@@ -54,6 +54,21 @@ class SymconJSLiveGauge extends JSLiveModule{
         $this->RegisterPropertyFloat("needle_colorNeedle_Alpha", 1);
         $this->RegisterPropertyInteger("needle_colorNeedleEnd", 0);
         $this->RegisterPropertyFloat("needle_colorNeedleEnd_Alpha", 1);
+        $this->RegisterPropertyInteger("needle_colorShadowUp", 0);
+        $this->RegisterPropertyFloat("needle_colorShadowUp_Alpha", 0.05);
+        $this->RegisterPropertyInteger("needle_colorShadowDown", 0);
+        $this->RegisterPropertyFloat("needle_colorShadowDown_Alpha", 0.5);
+
+        $this->RegisterPropertyInteger("needle_CircleSize", 15);
+        $this->RegisterPropertyBoolean("needle_CircleOuter", false);
+        $this->RegisterPropertyInteger("needle_colorNeedleCircleOuter", 16777215);
+        $this->RegisterPropertyFloat("needle_colorNeedleCircleOuter_Alpha", 1);
+        $this->RegisterPropertyInteger("needle_colorNeedleCircleOuterEnd", 16777215);
+        $this->RegisterPropertyFloat("needle_colorNeedleCircleOuterEnd_Alpha", 1);
+        $this->RegisterPropertyInteger("needle_colorNeedleCircleInner", 16777215);
+        $this->RegisterPropertyFloat("needle_colorNeedleCircleInner_Alpha", 1);
+        $this->RegisterPropertyInteger("needle_colorNeedleCircleInnerEnd", 16777215);
+        $this->RegisterPropertyFloat("needle_colorNeedleCircleInnerEnd_Alpha", 1);
 
         //Valuebox
         $this->RegisterPropertyBoolean("valuebox_display", false);
