@@ -218,6 +218,7 @@ class SymconJSLiveCalendar extends JSLiveModule{
 
             //print_r($path);
             $data = $this->GET_By_KEYPATH($formData["elements"], $path);
+            //print_r($data);
             $data = array_merge($data, $viewsoptions);
 
             $this->SET_By_KEYPATH($path, $formData["elements"], $data);
@@ -244,47 +245,6 @@ class SymconJSLiveCalendar extends JSLiveModule{
         }
 
         return json_encode($formData);
-    }
-    private function GET_PathList($arr, $paths = array(), $curPath = array())
-    {
-        if (array_key_exists("name", $arr))
-        {
-            $paths[] = array("path" => $curPath, "name" => $arr["name"]);
-        }
-        else
-        {
-            foreach ($arr as $key => $subarr)
-            {
-                $newPath = $curPath;
-                $newPath[] = $key;
-
-                //echo $key. "\r\n";
-
-                if (is_array($subarr))
-                {
-                    $paths = $this->GET_PathList($subarr, $paths, $newPath);
-                }
-            }
-        }
-        return $paths;
-    }
-    private function SET_By_KEYPATH($path, &$array=array(), $value=null)
-    {
-        $temp =& $array;
-
-        foreach ($path as $key) {
-            $temp =& $temp[$key];
-        }
-        $temp = $value;
-    }
-    private function GET_By_KEYPATH($array, $path){
-        $temp =& $array;
-
-        foreach($path as $key) {
-            //print_r($temp[$key]);
-            $temp =& $temp[$key];
-        }
-        return $temp;
     }
 
     public function ReceiveData($JSONString) {
