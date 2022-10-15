@@ -6,8 +6,9 @@
             "caption": "Title",
             "items": [
                 { "type": "CheckBox", "name": "title_display", "caption": "Display"},
-                { "type": "ValidationTextBox", "name": "title_text", "caption": "Text" },
+                { "type": "ValidationTextBox", "name": "title_text", "caption": "Text", "requireItem": "title_display"},
                 { "type": "Select", "name": "title_position", "caption": "Position",
+                    "requireItem": "title_display",
                     "options": [
                         { "caption": "top", "value": "top" },
                         { "caption": "left", "value": "left" },
@@ -17,6 +18,7 @@
                 },
                 {
                     "type": "RowLayout",
+                    "requireItem": "title_display",
                     "items": [
                         { "type": "Label", "caption": "Font:", "width": "100px" },
                         { "type": "NumberSpinner", "name": "title_fontSize", "caption": "Size", "width": "100px", "suffix": "px", "minimum": 0, "stepSize": 1},
@@ -55,21 +57,22 @@
             "caption": "Axes",
             "items": [
                 { "type": "CheckBox", "name": "axes_display", "caption": "Display"},
-                { "type": "CheckBox", "name": "axes_showLabel", "caption": "Show Label"},
-                { "type": "CheckBox", "name": "axes_drawBorder", "caption": "Draw Border"},
-                { "type": "CheckBox", "name": "axes_drawTicks", "caption": "Draw Ticks"},
-                { "type": "CheckBox", "name": "axes_drawOnChartArea", "caption": "Draw On Chart Area"},
-                { "type": "CheckBox", "name": "axes_beginAtZero", "caption": "Begin At Zero"},
-                { "type": "Select", "name": "axes_labelText", "caption": "Label",
+                { "type": "CheckBox", "name": "axes_showLabel", "caption": "Show Label", "requireItem": "axes_display"},
+                { "type": "CheckBox", "name": "axes_drawBorder", "caption": "Draw Border", "requireItem": "axes_display"},
+                { "type": "CheckBox", "name": "axes_drawTicks", "caption": "Draw Ticks", "requireItem": "axes_display"},
+                { "type": "CheckBox", "name": "axes_drawOnChartArea", "caption": "Draw On Chart Area", "requireItem": "axes_display"},
+                { "type": "CheckBox", "name": "axes_beginAtZero", "caption": "Begin At Zero", "requireItem": "axes_display"},
+                { "type": "Select", "name": "axes_labelText", "caption": "Label", "requireItem": "axes_display",
                     "options": [
                         { "caption": "Profilname", "value": 0 },
                         { "caption": "Profilname + Suffix", "value": 1 },
                         { "caption": "Suffix", "value": 2 }
                     ]
                 },
-                { "type": "NumberSpinner", "name": "axes_lineWidth", "caption": "LineWidth" },
+                { "type": "NumberSpinner", "name": "axes_lineWidth", "caption": "LineWidth","requireItem": "axes_display"},
                 {
                     "type": "RowLayout",
+                    "requireItem": "axes_display",
                     "items": [
                             { "type": "SelectColor", "name": "axes_color", "caption": "Color" },
                             { "type": "HorizontalSlider", "name": "axes_colorAlpha", "caption": "Alpha", "maximum": 1, "minimum": 0, "stepSize": 0.05}
@@ -77,6 +80,7 @@
                 },
                 {
                     "type": "RowLayout",
+                    "requireItem": "axes_display",
                     "items": [
                         { "type": "Label", "caption": "Font:", "width": "100px" },
                         { "type": "NumberSpinner", "name": "axes_labelfontSize", "caption": "Size", "width": "100px", "suffix": "px", "minimum": 0, "stepSize": 1},
@@ -113,6 +117,57 @@
         },
         {
             "type": "ExpansionPanel",
+            "caption": "X Axes",
+            "viewlevel": 1,
+            "items": [
+                { "type": "CheckBox", "name": "xaxes_display", "caption": "Display"},
+                { "type": "CheckBox", "name": "xaxes_overrideDynamic", "caption": "override dynamic scaling", "viewlevel": 2},
+                {
+                    "type": "List",
+                    "name": "xaxes_override_list",
+                    "caption": "Override XAches",
+                    "rowCount": 8,
+                    "viewlevel": 2,
+                    "requireItem": "xaxes_overrideDynamic",
+                    "add": false,
+                    "delete": false,
+                    "edit": true,
+                    "changeOrder": false,
+                    "columns": [
+                        {
+                            "caption": "Name",
+                            "name": "Name",
+                            "width": "300px",
+                            "add": ""
+                        },
+                        {
+                            "caption": "step Size",
+                            "name": "stepSize",
+                            "width": "200px",
+                            "add": 0,
+                            "edit": {
+                                "type": "NumberSpinner",
+                                "digits": 0,
+                                "minimum": 0
+                            }
+                        },
+                        {
+                            "caption": "max Ticks Limit",
+                            "name": "maxTicksLimit",
+                            "width": "200px",
+                            "add": 0,
+                            "edit": {
+                                "type": "NumberSpinner",
+                                "digits": 0,
+                                "minimum": 0
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "ExpansionPanel",
             "caption": "Points",
             "items": [
                 { "type": "NumberSpinner", "name": "point_radius", "caption": "Size", "suffix": "px", "minimum": 0, "stepSize": 1 },
@@ -138,7 +193,7 @@
             "caption": "Legend",
             "items": [
                 { "type": "CheckBox", "name": "legend_display", "caption": "Display"},
-                { "type": "Select", "name": "legend_position", "caption": "Position",
+                { "type": "Select", "name": "legend_position", "caption": "Position", "requireItem": "legend_display",
                     "options": [
                         { "caption": "top", "value": "top" },
                         { "caption": "left", "value": "left" },
@@ -146,7 +201,7 @@
                         { "caption": "right", "value": "right" }
                     ]
                 },
-                { "type": "Select", "name": "legend_align", "caption": "Align",
+                { "type": "Select", "name": "legend_align", "caption": "Align", "requireItem": "legend_display",
                     "options": [
                         { "caption": "start", "value": "start" },
                         { "caption": "center", "value": "center" },
@@ -155,6 +210,7 @@
                 },
                 {
                     "type": "RowLayout",
+                    "requireItem": "legend_display",
                     "items": [
                         { "type": "Label", "caption": "Font:", "width": "100px" },
                         { "type": "NumberSpinner", "name": "legend_fontSize", "caption": "Size", "width": "100px", "suffix": "px", "minimum": 0, "stepSize": 1  },
@@ -186,7 +242,7 @@
                         }
                     ]
                 },
-                { "type": "NumberSpinner", "name": "legend_boxWidth", "caption": "Box Width" }
+                { "type": "NumberSpinner", "name": "legend_boxWidth", "caption": "Box Width", "requireItem": "legend_display" }
 
             ]
         },
@@ -195,13 +251,13 @@
             "caption": "Tooltips",
             "items": [
                 { "type": "CheckBox", "name": "tooltips_enabled", "caption": "Enabled"},
-                { "type": "Select", "name": "tooltips_position", "caption": "Position",
+                { "type": "Select", "name": "tooltips_position", "caption": "Position", "requireItem": "tooltips_enabled",
                     "options": [
                         { "caption": "average", "value": "average" },
                         { "caption": "nearest", "value": "nearest" }
                     ]
                 },
-                { "type": "Select", "name": "tooltips_mode", "caption": "Mode",
+                { "type": "Select", "name": "tooltips_mode", "caption": "Mode", "requireItem": "tooltips_enabled",
                     "options": [
                         { "caption": "index", "value": "index" },
                         { "caption": "dataset", "value": "dataset" },
@@ -210,6 +266,7 @@
                 },
                 {
                     "type": "RowLayout",
+                    "requireItem": "tooltips_enabled",
                     "items": [
                         { "type": "Label", "caption": "Font:", "width": "100px" },
                         { "type": "NumberSpinner", "name": "tooltips_fontSize", "caption": "Size", "suffix": "px", "minimum": 0, "stepSize": 1, "width": "100px" },
@@ -241,8 +298,8 @@
                         }
                     ]
                 },
-                { "type": "SelectColor", "name": "tooltips_backgroundColor", "caption": "Background Color" },
-                { "type": "NumberSpinner", "name": "tooltips_cornerRadius", "caption": "Corner Radius" }
+                { "type": "SelectColor", "name": "tooltips_backgroundColor", "caption": "Background Color",  "requireItem": "tooltips_enabled"},
+                { "type": "NumberSpinner", "name": "tooltips_cornerRadius", "caption": "Corner Radius",  "requireItem": "tooltips_enabled"}
 
             ]
         },
@@ -314,7 +371,7 @@
                         { "caption": "top", "value": "top" }
                     ]
                 },
-                { "type": "NumberSpinner", "name": "datalabels_offset,", "caption": "Offset",  "suffix": "px", "minimum": 0, "stepSize": 1},
+                { "type": "NumberSpinner", "name": "datalabels_offset", "caption": "Offset",  "suffix": "px", "minimum": 0, "stepSize": 1},
                 {
                     "type": "RowLayout",
                     "items": [
@@ -379,6 +436,9 @@
             "delete": true,
             "edit": true,
             "changeOrder": true,
+            "onAdd": " SymconJSLiveChart_ReloadFormAxes($id, $Axes, 0);",
+            "onEdit": " SymconJSLiveChart_ReloadFormAxes($id, $Axes, 1);",
+            "onDelete": " SymconJSLiveChart_ReloadFormAxes($id, $Axes, 2);",
             "columns": [
                 {
                     "caption": "Ident",
@@ -386,7 +446,8 @@
                     "width": "200px",
                     "add": "",
                     "edit": {
-                        "type": "ValidationTextBox"
+                        "type": "ValidationTextBox",
+                        "validate": "^(?=.{2,}$)([a-zA-Z][a-zA-Z0-9_-]*)$"
                     }
                 },
                 {
@@ -594,6 +655,8 @@
             "delete": true,
             "edit": true,
             "changeOrder": true,
+            "onAdd": " SymconJSLiveChart_ReloadFormDatasets($id, $Datasets, 0);",
+            "onEdit": " SymconJSLiveChart_ReloadFormDatasets($id, $Datasets, 1);",
             "columns": [
                 {
                     "caption": "Type",
@@ -790,6 +853,29 @@
                     }
                 },
                 {
+                    "caption": "Monotone Interpolation",
+                    "name": "MonotoneInterpolationMode",
+                    "width": "100px",
+                    "add": false,
+                    "visible": false,
+                    "edit": {
+                        "type": "CheckBox"
+                    }
+                },
+                {
+                    "caption": "Tension",
+                    "name": "Tension",
+                    "width": "100px",
+                    "add": 0.0,
+                    "visible": false,
+                    "edit": {
+                        "type": "NumberSpinner",
+                        "digits": 2,
+                        "minimum": -1,
+                        "maximum": 1
+                    }
+                },
+                {
                     "caption": "Override Point Size",
                     "name": "PointRadius",
                     "width": "50px",
@@ -920,7 +1006,7 @@
                 {
                     "type": "RowLayout",
                     "items": [
-                        { "type": "CheckBox", "name": "CreateOutput", "caption": "Create IPSView HTMLBox"},
+                        { "type": "CheckBox", "name": "CreateIPSView", "caption": "Create IPSView HTMLBox"},
                         { "type": "Label", "caption": "Works only if the Option IPSView in Gateway is enabled!"}
                     ]
                 },
