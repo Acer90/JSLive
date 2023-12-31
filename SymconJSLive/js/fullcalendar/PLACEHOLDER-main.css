@@ -1334,8 +1334,8 @@ A VERTICAL event
 
 }
 .fc .fc-list-empty {
-    background-color: rgba(208, 208, 208, 0.3);
-    background-color: var(--fc-neutral-bg-color, rgba(208, 208, 208, 0.3));
+    /*background-color: rgba(208, 208, 208, 0.3);
+    background-color: var(--fc-neutral-bg-color, rgba(208, 208, 208, 0.3));*/
     height: 100%;
     display: flex;
     justify-content: center;
