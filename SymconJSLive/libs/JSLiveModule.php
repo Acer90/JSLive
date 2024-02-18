@@ -835,7 +835,7 @@ class JSLiveModule extends IPSModule
 
             if($height == 0){
                 //$link="https://wiki.selfhtml.org/extensions/Selfhtml/frickl.php/Beispiel:JS-window-abmessungen.html#view_result";
-                $htmlStr .= '<iframe src="' . $link . '" frameborder="0" scrolling="'.$scrolling.'"></iframe>';
+                $htmlStr .= '<iframe src="' . $link . '" frameborder="0" scrolling="'.$scrolling.'" style="width:100%;height:100%;"></iframe>';
             }else{
                 $htmlStr .= '<iframe src="' . $link . '" width="100%" frameborder="0" scrolling="'.$scrolling.'" height="'.$height.'"></iframe>';
             }
