@@ -149,7 +149,7 @@ class SymconJSLiveCalendar extends JSLiveModule{
         $this->RegisterPropertyString("dataEvents", "[]");
         $this->RegisterPropertyString("customViews", "[]");
 
-        $this->RegisterPropertyInteger("CheckUpdate_Interval", 30);
+        $this->RegisterPropertyInteger("CheckUpdate_Interval", 60);
     }
     public function ApplyChanges() {
         //Never delete this line!

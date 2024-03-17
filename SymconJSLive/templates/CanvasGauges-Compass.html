@@ -191,7 +191,7 @@
         }
     }
 
-    window.onload = function() {
+    $(document).ready(function() {
         try {
             LoadGauge();
 
@@ -210,7 +210,7 @@
         }catch (e) {
             alert(e);
         }
-    }
+    });
 
     document.fonts.ready.then(function () {
         //if font is load then here Start load guage
