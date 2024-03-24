@@ -124,7 +124,7 @@
                 UpdateGauge(data.Variable, data.Value);
             });
         }catch (e) {
-            alert(e);
+            alert(e.message + "\r\n"+ e.stack);
         }
     }
 
@@ -185,7 +185,7 @@
 
                 //Control Variables
             }catch (e) {
-                console.log("PullNewData => ", e);
+                console.log("PullNewData => ", e.message + "\r\n"+ e.stack);
             }
             await sleep(refreshRate);
         }
@@ -194,7 +194,7 @@
     $(document).ready(function() {
         try {
             LoadGauge();
-
+            
             if(fontLoaded){
                 //update if font is loaded
                 gauge.update();
@@ -208,7 +208,7 @@
                 connect();
             }
         }catch (e) {
-            alert(e);
+            alert(e.message + "\r\n"+ e.stack);
         }
     });
 

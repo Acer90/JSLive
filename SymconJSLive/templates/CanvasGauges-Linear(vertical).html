@@ -153,7 +153,7 @@
                 gauge.draw();
             });
         }catch (e){
-            alert(e);
+            alert(e.message + "\r\n"+ e.stack);
         }
     }
 
@@ -292,7 +292,7 @@
                 connect();
             }
         }catch (e) {
-            alert(e);
+            alert(e.message + "\r\n"+ e.stack);
         }
     });
 
