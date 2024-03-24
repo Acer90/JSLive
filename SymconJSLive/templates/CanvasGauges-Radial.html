@@ -271,7 +271,7 @@
         try {
             LoadGauge();
 
-            if(fontLoaded){
+            if(fontLoaded && typeof gauge.update !== 'undefined'){
                 //update if font is loaded
                 //gauge.update();
             }
@@ -289,8 +289,8 @@
     });
 
     document.fonts.ready.then(function () {
-        if(typeof gauge !== 'undefined'){
-            //gauge.update();
+        if(typeof gauge.update !== 'undefined'){
+            gauge.update();
         }
         fontLoaded = true;
     });
