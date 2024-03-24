@@ -194,8 +194,8 @@
     $(document).ready(function() {
         try {
             LoadGauge();
-            
-            if(fontLoaded){
+
+            if(fontLoaded && gauge !== undefined && gauge.update !== undefined){
                 //update if font is loaded
                 gauge.update();
             }
@@ -207,14 +207,13 @@
             } else {
                 connect();
             }
-        }catch (e) {
+        } catch (e) {
             alert(e.message + "\r\n"+ e.stack);
         }
     });
 
     document.fonts.ready.then(function () {
-        //if font is load then here Start load guage
-        if(typeof gauge !== 'undefined'){
+        if(gauge !== undefined && gauge.update !== undefined){
             gauge.update();
         }
         fontLoaded = true;

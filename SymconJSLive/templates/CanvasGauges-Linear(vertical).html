@@ -273,13 +273,11 @@
         }
     }
 
-
-
     $(document).ready(function() {
         try {
             LoadGauge();
 
-            if(fontLoaded){
+            if(fontLoaded && gauge !== undefined && gauge.update !== undefined){
                 //update if font is loaded
                 gauge.update();
             }
@@ -291,13 +289,13 @@
             } else {
                 connect();
             }
-        }catch (e) {
-            alert(e.message + "\r\n"+ e.stack);
+        } catch (e) {
+            alert("Linear(Vertical):" + e.message + "\r\n"+ e.stack);
         }
     });
 
     document.fonts.ready.then(function () {
-        if(typeof gauge !== 'undefined'){
+        if(gauge !== undefined && gauge.update !== undefined){
             gauge.update();
         }
         fontLoaded = true;
