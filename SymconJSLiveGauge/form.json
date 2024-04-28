@@ -222,6 +222,13 @@
             "caption": "Progressbar",
             "items": [
                 { "type": "CheckBox", "name": "progressbar_display", "caption": "Display"},
+                { "type": "Select", "name": "progressbar_barStartPosition", "caption": "Start Position",
+                    "options": [
+                        { "caption": "left", "value": "left" },
+                        { "caption": "right", "value": "right" },
+                        { "caption": "middle", "value": "middle" }
+                    ]
+                },
                 { "type": "NumberSpinner", "name": "progressbar_barWidth", "caption": "Width", "suffix": "%" },
                 { "type": "NumberSpinner", "name": "progressbar_barShadow", "caption": "Shadow", "suffix": "px" },
                 {
@@ -378,6 +385,12 @@
             "items": [
                 { "type": "NumberSpinner", "name": "radial_startAngle", "caption": "Start Angle", "suffix": "°"},
                 { "type": "NumberSpinner", "name": "radial_ticksAngle", "caption": "Ticks Angle", "suffix": "°"},
+                { "type": "Select", "name": "animation_target", "caption": "Animation Target",
+                    "options": [
+                        { "caption": "needle", "value": "needle" },
+                        { "caption": "plate", "value": "plate" }
+                    ]
+                },
                 {
                     "type": "ExpansionPanel",
                     "caption": "Circle",

@@ -162,3 +162,7 @@ window.detectLocation = function () {
         }
     }
 }
+
+function getTime() {
+    return (new Date()).getTime();
+}

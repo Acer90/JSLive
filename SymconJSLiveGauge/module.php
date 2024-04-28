@@ -83,6 +83,7 @@ class SymconJSLiveGauge extends JSLiveModule{
 
         //Progressbar
         $this->RegisterPropertyBoolean("progressbar_display", false);
+        $this->RegisterPropertyString("progressbar_barStartPosition", "left");  //‘right’. By default, is ‘left’. Enable anti-clockwise progress bars and middle start point progress bars.
         $this->RegisterPropertyInteger("progressbar_barWidth", 5);
         $this->RegisterPropertyInteger("progressbar_barShadow", 1);
         $this->RegisterPropertyInteger("progressbar_colorBar", 0);
@@ -104,6 +105,7 @@ class SymconJSLiveGauge extends JSLiveModule{
         //animation
         $this->RegisterPropertyString("animation_rule", "linear");
         $this->RegisterPropertyInteger("animation_duration", 500);
+        $this->RegisterPropertyString("animation_target", "needle"); //needle, plate
 
         $this->RegisterPropertyString("Ticks", "[]");
         $this->RegisterPropertyString("Highlights", "[]");

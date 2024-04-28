@@ -20,7 +20,15 @@
       "HighlightColor": "Farbe",
       "HighlightColor Alpha": "Transparenz/Alpha",
 
+      "Start Position": "Start-Position",
+      "left": "links",
+      "right": "rechts",
+      "middle": "mittig",
+
       "Radial Gauge Settings": "Einstellungen der Radialanzeige",
+      "Animation Target": "Animation Ziel",
+      "needle": "Nadel",
+      "plate": "Platte",
       "Start Angle": "Startwinkel",
       "Ticks Angle": "Winkel der Anzeige",
       "Linear Gauge Settings": "Einstellungen der Linearanzeige",
@@ -63,7 +71,7 @@
       "Viewport Enable": "Aktiviere Viewport",
       "IFrame Height": "IFrame Höhe",
 
-	  "Get Link": "Öffne Link",
+	    "Get Link": "Öffne Link",
       "Configuration": "Konfiguration",
       "Load from other Modul": "Einstellungen von einen anderen Modul laden",
       "Load": "Laden",
@@ -71,7 +79,7 @@
       "File": "Datei",
       "Export": "Export Konfigurationsdatei",
 
-	  "Status OK!": "Status Ok!"
+	    "Status OK!": "Status Ok!"
     }
   }
 }

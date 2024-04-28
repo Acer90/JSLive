@@ -101,11 +101,10 @@
 
                     //progressbar
                     colorBar: configuration.progressbar_colorBar,
-                    colorBarProgress: configuration.progressbar_colorBarProgress,
+                    colorBarProgress: configuration.progressbar_colorBarProgress, 
                     barShadow: configuration.progressbar_barShadow,
                     barWidth: configuration.progressbar_barWidth,
-                    barBeginCircle: false,
-                    //barStartPosition: 'right',
+                    barStartPosition: configuration.progressbar_barStartPosition, //‘right’. By default, is ‘left’. Enable anti-clockwise progress bars and middle start point progress bars.
 
                     //Ticks
                     tickSide: configuration.linear_tickSide, //“right”, “both”. => nur bei linear
@@ -123,6 +122,7 @@
                     fontNumbersSize: configuration.ticks_fontSize,
                     exactTicks: configuration.ticks_exactTicks,
 
+                    animationTarget: configuration.animation_target,
                     animationRule: configuration.animation_rule, //'linear', //”, “quad”, “quint”, “cycle”, “bounce”, “elastic”  “dequad”, “dequint”, “decycle”, “debounce”, “delastic”.
                     animationDuration: configuration.animation_duration
 
