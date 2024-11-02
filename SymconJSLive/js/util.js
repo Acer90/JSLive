@@ -123,8 +123,8 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 window.detectLocation = function () {
     // Jump through some hoops and loops for IPSStudio
     if (window.location.href.substr(0, 5) === "data:") {
-        let data = decodeURI(window.location.href);
-        let match = data.match(/<base href="(http:|https:)\/\/(.*)\/">/);
+        let data = decodeURIComponent(window.location.href);
+        let match = data.match(/<base href="(http:|https:)\/\/(.*)[\/]*"[\/]*>/);
         if (match) {
             return {
                 'protocol': match[1],
@@ -134,28 +134,41 @@ window.detectLocation = function () {
             document.write("Cannot detect protocol/host on IPSStudio Client!");
             throw 'Cannot detect protocol/host on IPSStudio Client!';
         }
-    }else if(window.location.protocol.toLowerCase() == "about:"){ //alternative für windows client
-        var url = document.baseURI;
-        var protocol = "http:";
-        var port = "";
-        var host = "127.0.0.1";
-
-        if(url.startsWith('https')) protocol = "https:";
-
-        host = url.replace(protocol+"//", "");
-        /*if(host.includes(":")){
-            host = host.split(":")[0];
-        }*/
-        if(host.includes("/")){
-            host = host.split("/")[0];
+    }
+    // For IPSView Windows
+    else if (window.location.href === 'about:blank') {
+        let data = document.head.innerHTML;
+        let match = data.match(/<base href="(http:|https:)\/\/(.*)[\/]*"[\/]*>/);
+        if (match) {
+            return {
+                'protocol': match[1],
+                'host': match[2]
+            }
+        } else {
+            return {
+                'protocol': window.top.location.protocol,
+                'host': window.top.location.host
+            }
         }
-
-        return {
-            'protocol': protocol,
-            'host': host
+    }
+    // For Flutter Web (new Visualization (Web+App) and IPSView WebClient)
+    else if (window.location.href === 'about:srcdoc') {
+        let data = document.body.innerHTML;
+        let match = data.match(/<base href="(http:|https:)\/\/(.*)[\/]*"[\/]*>/);
+        if (match) {
+            return {
+                'protocol': match[1],
+                'host': match[2]
+            }
+        } else {
+            return {
+                'protocol': window.top.location.protocol,
+                'host': window.top.location.host
+            }
         }
-    } else {
-        // Use the simple way for WebFront + Symcon Apps
+    }
+    // Use the simple way for WebFront + old Symcon Apps
+    else {
         return {
             'protocol': window.location.protocol,
             'host': window.location.host

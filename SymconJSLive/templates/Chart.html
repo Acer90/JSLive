@@ -65,9 +65,9 @@
             });*/
 
             var type = "bar";
-            /*if(config_dataset.length > 0 && config_dataset[0].type !== undefined){
+            if(config_dataset.length > 0 && config_dataset[0].type !== undefined){
                 type = config_dataset[0].type;
-            }*/
+            }
 
             var config = {
                 type: type,
@@ -331,10 +331,14 @@
                         }
                     }
                 });
-
-                myChart.update({
-                    preservation: true
-                });
+                var dt_now = new Date();
+                var dt_now_unix = dt_now.getTime();
+                var change_unix = (dt_val+60)*1000;
+                if(change_unix >= dt_now_unix){
+                    myChart.update({
+                        preservation: true
+                    });
+                }
             }
         } catch (e) {
             console.error(e);
@@ -1018,8 +1022,27 @@
         ctx.style.height = Get_WindowHeight() - 20+"px";
     }
 
+    var lastInterval = getTime();
+    var Heartbeat = true;
+    function intervalHeartbeat() {
+        var now = getTime();
+        var diff = now - lastInterval;
+        var offBy = diff - 1000; // 1000 = the 1 second delay I was expecting
+        lastInterval = now;
 
+        if(offBy > 1000) { // don't trigger on small stutters less than 1000ms
+            //alert('interval heartbeat - off by ' + offBy + 'ms');
+            if(Heartbeat){
+                Heartbeat = false;
+                var dt_val = Math.floor(Date.now() / 1000);
+                ReloadChart(update_vars[0], dt_val, null, true);
+            }
+        }else{
+            Heartbeat = true
+        }
+    }
 
+    setInterval(intervalHeartbeat, 1000);
 </script>
 </body>
 </html>
